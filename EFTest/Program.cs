@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using EFTest.Data;
+using EFTest.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +56,14 @@ namespace EFTest
                     // 3  London a
                     // 2  London b
                     // 1  Prague c
+
+                    var orderedQuery = context.PersonName.Where(p => p.Name.Contains("a"));
+                    if (orderedQuery is IOrderedQueryable<PersonName> orderedQ)
+                        orderedQuery = orderedQ.ThenBy(p => p.Name); // code goes here because of Where and throws an exception
+                    else
+                        orderedQuery = orderedQuery.OrderBy(p => p.Name);
+
+                    var orderedQueryData = orderedQuery.ToArray();
                 }
                 catch (Exception ex)
                 {
